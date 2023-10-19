@@ -39,9 +39,11 @@ tasks {
     [...]
     register<ShadowJar>("loaderJar") {
         archiveClassifier.set("loader")
-        configurations = listOf(loader)
+        from(sourceSets.main.get().resources.srcDirs)
+        from(loader.files.map { zipTree(it) })
+        include("*.mhq")
+        include("**/*.class")
         manifest.attributes(mapOf(
-            "ModInfoURL" to "<RAW URL TO YOUR MOD INFO FILE>",
             "FMLCorePlugin" to "dev.macrohq.publicloader.<YOURMODNAME>.LoaderPlugin"
         ))
         relocate("dev.macrohq.publicloader", "dev.macrohq.publicloader.<YOURMODNAME>")
@@ -57,6 +59,11 @@ tasks {
   "md5": "<MD5 OF YOUR MOD JAR>",
   "url": "<RAW URL TO YOUR MOD JAR>"
 }
+```
+
+6. Create a file called "YOURMODNAME.mhq" in your src/main/resources
+```
+https://RAW URL TO YOUR MOD INFO FILE
 ```
 
 And done. When you run the gradle build task a modname-loader.jar will be created in your build/libs folder. This is the file you can share with your users.
