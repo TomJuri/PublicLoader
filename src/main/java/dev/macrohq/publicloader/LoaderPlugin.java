@@ -35,7 +35,7 @@ public class LoaderPlugin implements IFMLLoadingPlugin {
             String url = modInfo.get("url").getAsString();
             File file = new File(System.getProperty("java.io.tmpdir") + "/MacroHQ_PublicLoader_Mod_" + modId + ".jar");
             if (!file.exists() || doesNotMatchMD5(file, md5)) {
-                if (!downloadFile(url, file)) throw new RuntimeException("Failed to download mod!");
+                downloadFile(url, file);
                 if (doesNotMatchMD5(file, md5))
                     throw new RuntimeException("MD5 hash of downloaded mod does not match!");
             }
@@ -58,10 +58,8 @@ public class LoaderPlugin implements IFMLLoadingPlugin {
         return !hash.equals(DigestUtils.md5Hex(new BufferedInputStream(Files.newInputStream(file.toPath()))));
     }
 
-    private static boolean downloadFile(String url, File destination) throws IOException {
-        if (!destination.getParentFile().mkdirs()) return false;
+    private static void downloadFile(String url, File destination) throws IOException {
         Files.copy(new URL(url).openStream(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        return true;
     }
 
     private static void loadMod(File file) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException {
