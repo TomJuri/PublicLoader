@@ -8,7 +8,10 @@ import net.minecraftforge.fml.relauncher.ModListHelper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -17,8 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 public class LoaderPlugin implements IFMLLoadingPlugin {
 
@@ -41,10 +44,10 @@ public class LoaderPlugin implements IFMLLoadingPlugin {
     }
 
     private static JsonObject getModInfo() throws IOException {
-        String modId = LoaderPlugin.class.getTypeName().split("\\.")[2].replace("loader", "");
-        String mhqFileName = "/" + modId + ".mhq";
-        URL modInfoURL = new URL(IOUtils.toString(Objects.requireNonNull(LoaderPlugin.class.getResource(mhqFileName))));
-        return new Gson().fromJson(IOUtils.toString(modInfoURL), JsonObject.class);
+        try(InputStream is = LoaderPlugin.class.getProtectionDomain().getCodeSource().getLocation().openStream()) {
+            URL modInfoURL = new URL(new Manifest(is).getMainAttributes().get("ModInfoURL").toString());
+            return new Gson().fromJson(IOUtils.toString(modInfoURL), JsonObject.class);
+        }
     }
 
     private static boolean doesNotMatchMD5(File file, String hash) throws IOException {
