@@ -38,6 +38,7 @@ dependencies {
 tasks {
     [...]
     register<ShadowJar>("loaderJar") {
+        archiveVersion.set("")
         archiveClassifier.set("loader")
         from(sourceSets.main.get().resources.srcDirs)
         from(loader.files.map { zipTree(it) })
