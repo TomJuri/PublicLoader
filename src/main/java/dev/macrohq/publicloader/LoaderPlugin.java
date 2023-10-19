@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.stream.Stream;
 
 public class LoaderPlugin implements IFMLLoadingPlugin {
 
@@ -44,12 +45,11 @@ public class LoaderPlugin implements IFMLLoadingPlugin {
         }
     }
 
-    private static JsonObject getModInfo() throws IOException, URISyntaxException {
-        URL url = LoaderPlugin.class.getProtectionDomain().getCodeSource().getLocation();
-        try(JarFile jar = new JarFile(new File(url.toURI()))) {
-            URL modInfoURL = new URL(jar.getManifest().getMainAttributes().get("ModInfoURL").toString());
-            return new Gson().fromJson(IOUtils.toString(modInfoURL), JsonObject.class);
-        }
+    private static JsonObject getModInfo() throws IOException, NullPointerException {
+        URL url = LoaderPlugin.class.getResource("/" + LoaderPlugin.class.getTypeName().split("\\.")[LoaderPlugin.class.getTypeName().split("\\.").length - 1]);
+        if(url == null) throw new RuntimeException("Unable to find mod info file!");
+        URL modInfoURL = new URL(IOUtils.toString(url));
+        return new Gson().fromJson(IOUtils.toString(modInfoURL), JsonObject.class);
     }
 
     private static boolean doesNotMatchMD5(File file, String hash) throws IOException {
