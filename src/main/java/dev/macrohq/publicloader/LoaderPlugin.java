@@ -46,7 +46,7 @@ public class LoaderPlugin implements IFMLLoadingPlugin {
     }
 
     private static JsonObject getModInfo() throws IOException, NullPointerException {
-        URL url = LoaderPlugin.class.getResource("/" + LoaderPlugin.class.getTypeName().split("\\.")[LoaderPlugin.class.getTypeName().split("\\.").length - 1]);
+        URL url = LoaderPlugin.class.getResource("/" + LoaderPlugin.class.getTypeName().split("\\.")[LoaderPlugin.class.getTypeName().split("\\.").length - 1] + ".mhq");
         if(url == null) throw new RuntimeException("Unable to find mod info file!");
         URL modInfoURL = new URL(IOUtils.toString(url));
         return new Gson().fromJson(IOUtils.toString(modInfoURL), JsonObject.class);
