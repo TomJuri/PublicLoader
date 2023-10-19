@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -43,9 +44,10 @@ public class LoaderPlugin implements IFMLLoadingPlugin {
         }
     }
 
-    private static JsonObject getModInfo() throws IOException {
-        try(InputStream is = LoaderPlugin.class.getProtectionDomain().getCodeSource().getLocation().openStream()) {
-            URL modInfoURL = new URL(new Manifest(is).getMainAttributes().get("ModInfoURL").toString());
+    private static JsonObject getModInfo() throws IOException, URISyntaxException {
+        URL url = LoaderPlugin.class.getProtectionDomain().getCodeSource().getLocation();
+        try(JarFile jar = new JarFile(new File(url.toURI()))) {
+            URL modInfoURL = new URL(jar.getManifest().getMainAttributes().get("ModInfoURL").toString());
             return new Gson().fromJson(IOUtils.toString(modInfoURL), JsonObject.class);
         }
     }
