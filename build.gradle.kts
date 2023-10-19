@@ -1,6 +1,7 @@
 plugins {
     id("cc.polyfrost.loom") version "0.10.0.5"
     id("dev.architectury.architectury-pack200") version "0.1.3"
+    id("maven-publish")
 }
 
 group = "dev.macrohq"
@@ -21,3 +22,14 @@ tasks.jar.get().manifest.attributes(mapOf(
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = group.toString()
+            artifactId = project.name.lowercase()
+            version = project.version.toString()
+            from(components["java"])
+        }
+    }
+}
