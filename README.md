@@ -1,3 +1,7 @@
+This is from when I was making Minecraft Hypixel Skyblock "Macros". It's abandoned.
+Moved it from the GitHub organization, since I felt like I didn't have enough stuff on my profile.
+
+Old README:
 # PublicLoader
 PublicLoader is a free and open source mod to help you always load the latest version of your mod into the user's client.
 [![Release](https://jitpack.io/v/Macro-HQ/PublicLoader.svg)](https://jitpack.io/#Macro-HQ/PublicLoader)
